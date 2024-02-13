@@ -1,0 +1,118 @@
+internal class Program
+{
+    private static void Main(string[] args)
+    {
+        Zoo zoo = new Zoo();
+        zoo.ShowMenu();
+    }
+}
+
+public class Aviary
+{
+    public Aviary(string name, List<string> genders, string sound, int animalCount)
+    {
+        Name = name;
+        Genders = genders;
+        Sound = sound;
+        AnimalCount = animalCount;
+    }
+
+    public string Name { get; private set; }
+    public List<string> Genders { get; private set; }
+    public string Sound { get; private set; }
+    public int AnimalCount { get; private set; }
+
+    public void ShowInfo()
+    {
+        Console.WriteLine($"В этом вольере находятся - {Name}. Здесь обитает - {AnimalCount} животных.");
+        Console.WriteLine("Пола животных: ");
+
+        foreach (var gender in Genders)
+        {
+            Console.WriteLine($"{gender}.");
+        }
+
+        Console.WriteLine($"Издают звук - {Sound}.");
+    }
+}
+
+public class Zoo
+{
+    private List<Aviary> _aviaries;
+
+    public Zoo()
+    {
+        _aviaries = new List<Aviary>();
+    }
+
+    private void AddAviary(Aviary aviary)
+    {
+        _aviaries.Add(aviary);
+    }
+
+    private void AddAnimals()
+    {
+        AddAviary(new Aviary("Львы", new List<string> { "Мужской", "Женский" }, "Ррр", 2));
+        AddAviary(new Aviary("Обезьяны", new List<string> { "Мужской", "Женский", "Женский","Мужской" }, "У-у-а-а", 4));
+        AddAviary(new Aviary("Слоны", new List<string> { "Мужской", "Мужской", "Женский" }, "Труууу", 3));
+        AddAviary(new Aviary("Пингвины", new List<string> { "Мужской", "Женский", "Мужской", "Мужской", "Женский", "Женский", "Женский"}, "Кря", 6));
+    }
+
+    public void ShowMenu()
+    {
+        const string CommandShowAviaryLions = "1";
+        const string CommandShowAviaryMonkeys = "2";
+        const string CommandShowAviaryElephants = "3";
+        const string CommandShowAviaryPenguins = "4";
+        const string CommandExit = "5";
+
+        bool isZooOpen = true;
+
+        AddAnimals();
+
+        while (isZooOpen)
+        {
+            Console.WriteLine("Добро пожаловать в зоопарк!");
+            Console.WriteLine("Выбери вольер для посещения: ");
+            Console.WriteLine($"{CommandShowAviaryLions} - Посетить вольер со львами.");
+            Console.WriteLine($"{CommandShowAviaryMonkeys} - Посетить вольер с обезьянами.");
+            Console.WriteLine($"{CommandShowAviaryElephants} - Посетить вольер со слонами.");
+            Console.WriteLine($"{CommandShowAviaryPenguins} - Посетить вольер с пенгвинами.");
+            Console.WriteLine($"{CommandExit} - Выйти из зоопарка.");
+            string input = Console.ReadLine();
+
+            if (int.TryParse(input, out int index) && index > 0 && index <= _aviaries.Count)
+            {
+                _aviaries[index - 1].ShowInfo();
+            }
+            else if(input == CommandExit)
+            {
+                isZooOpen = false;
+                Console.WriteLine("Вы вышли из зоопарка.");
+            }
+            else
+            {
+                Console.WriteLine("Некорректный ввод.");
+            }
+
+            Console.WriteLine("Нажмите любую клавишу чтобы выйти из вольера.");
+            Console.ReadKey();
+            Console.Clear();
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+//Пользователь запускает приложение и перед ним находится меню, в котором он может выбрать, к какому вольеру подойти.
+//При приближении к вольеру, пользователю выводится информация о том, что это за вольер, сколько животных там обитает,
+//их пол и какой звук издает животное.
+//Вольеров в зоопарке может быть много, в решении нужно создать минимум 4 вольера.
