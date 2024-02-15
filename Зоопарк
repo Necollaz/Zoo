@@ -7,43 +7,6 @@ internal class Program
     }
 }
 
-public interface IAnimalFactory
-{
-    Animal CreateAnimal(string gender);
-}
-
-public class LionFactory : IAnimalFactory
-{
-    public Animal CreateAnimal(string gender)
-    {
-        return new Animal("Лев", gender, "Ррррр");
-    }
-}
-
-public class MonkeyFactory : IAnimalFactory
-{
-    public Animal CreateAnimal(string gender)
-    {
-        return new Animal("Обезьяна", gender, "У-у-а-а");
-    }
-}
-
-public class ElephantFactory : IAnimalFactory
-{
-    public Animal CreateAnimal(string gender)
-    {
-        return new Animal("Слон", gender, "Трууу");
-    }
-}
-
-public class PenguinFactory : IAnimalFactory
-{
-    public Animal CreateAnimal(string gender)
-    {
-        return new Animal("Пингвин", gender, "Кря");
-    }
-}
-
 public class Animal
 {
     public Animal(string name, string genders, string sound)
@@ -56,6 +19,43 @@ public class Animal
     public string Name { get; private set; }
     public string Genders { get; private set; }
     public string Sound { get; private set; }
+}
+
+public abstract class AnimalFactory
+{
+    public abstract Animal CreateAnimal(string gender);
+}
+
+public class LionFactory : AnimalFactory
+{
+    public override Animal CreateAnimal(string gender)
+    {
+        return new Animal("Лев", gender, "Ррррр");
+    }
+}
+
+public class MonkeyFactory : AnimalFactory
+{
+    public override Animal CreateAnimal(string gender)
+    {
+        return new Animal("Обезьяна", gender, "У-у-а-а");
+    }
+}
+
+public class ElephantFactory : AnimalFactory
+{
+    public override Animal CreateAnimal(string gender)
+    {
+        return new Animal("Слон", gender, "Трууу");
+    }
+}
+
+public class PenguinFactory : AnimalFactory
+{
+    public override Animal CreateAnimal(string gender)
+    {
+        return new Animal("Пингвин", gender, "Кря");
+    }
 }
 
 public class Aviary
@@ -95,7 +95,7 @@ public class Zoo
     {
         Random random = new Random();
 
-        List<IAnimalFactory> animalFactories = new List<IAnimalFactory>
+        List<AnimalFactory> animalFactories = new List<AnimalFactory>
         {
             new LionFactory(),
             new MonkeyFactory(),
@@ -107,14 +107,14 @@ public class Zoo
         {
             List<Animal> animals = new List<Animal>();
 
-            int genderAnimal = 2;
+            string[] genders = new string[] { "Самец", "Самка" };
             int minNumberAnimal = 2;
             int maxNumberAnimal = 8;
             int countAnimals = random.Next(minNumberAnimal, maxNumberAnimal);
 
             for (int i = 0; i < countAnimals; i++)
             {
-                string gender = random.Next(genderAnimal) == 0 ? "Самец" : "Самка";
+                string gender = genders[random.Next(genders.Length)];
                 animals.Add(factory.CreateAnimal(gender));
             }
 
