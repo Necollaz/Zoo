@@ -7,32 +7,40 @@ internal class Program
     }
 }
 
-public class Aviary
+public class Animal
 {
-    public Aviary(string name, List<string> genders, string sound, int animalCount)
+    public Animal(string name, string genders, string sound)
     {
         Name = name;
         Genders = genders;
         Sound = sound;
-        AnimalCount = animalCount;
     }
 
     public string Name { get; private set; }
-    public List<string> Genders { get; private set; }
+    public string Genders { get; private set; }
     public string Sound { get; private set; }
-    public int AnimalCount { get; private set; }
+}
+
+public class Aviary
+{
+    private List<Animal> _animals = new List<Animal>();
+
+    public Aviary(string name, List<Animal> animals)
+    {
+        _animals = animals;
+        Name = name;
+    }
+
+    public string Name { get; private set; }
 
     public void ShowInfo()
     {
-        Console.WriteLine($"В этом вольере находятся - {Name}. Здесь обитает - {AnimalCount} животных.");
-        Console.WriteLine("Пола животных: ");
+        Console.WriteLine($"В этом вольере обитают - {Name}. Количество животных - {_animals.Count}.");
 
-        foreach (var gender in Genders)
+        foreach (var animal in _animals)
         {
-            Console.WriteLine($"{gender}.");
+            Console.WriteLine($"Животное: {animal.Name}, пол - {animal.Genders}, издает звук - {animal.Sound}."); ;
         }
-
-        Console.WriteLine($"Издают звук - {Sound}.");
     }
 }
 
@@ -43,19 +51,51 @@ public class Zoo
     public Zoo()
     {
         _aviaries = new List<Aviary>();
+        AddAnimaals();
     }
 
-    private void AddAviary(Aviary aviary)
+    private void AddAnimaals()
     {
-        _aviaries.Add(aviary);
-    }
+        var aviary1 = new Aviary("Львы", new List<Animal>()
+        {
+            new Animal("Лев", "Самец", "Рррр"),
+            new Animal("Львицы", "Самка", "Рррр"),
+            new Animal("Лев", "Самец", "Рррр"),
+            new Animal("Львицы", "Самка", "Рррр")
+        });
 
-    private void AddAnimals()
-    {
-        AddAviary(new Aviary("Львы", new List<string> { "Мужской", "Женский" }, "Ррр", 2));
-        AddAviary(new Aviary("Обезьяны", new List<string> { "Мужской", "Женский", "Женский","Мужской" }, "У-у-а-а", 4));
-        AddAviary(new Aviary("Слоны", new List<string> { "Мужской", "Мужской", "Женский" }, "Труууу", 3));
-        AddAviary(new Aviary("Пингвины", new List<string> { "Мужской", "Женский", "Мужской", "Мужской", "Женский", "Женский", "Женский"}, "Кря", 6));
+        var aviary2 = new Aviary("Обезьяны", new List<Animal>()
+        {
+            new Animal("Обезьяна", "Самец", "У-у-а-а"),
+            new Animal("Обезьяна", "Самка", "У-у-а-а"),
+            new Animal("Обезьяна", "Самка", "У-у-а-а"),
+            new Animal("Обезьяна", "Самка", "У-у-а-а"),
+            new Animal("Обезьяна", "Самец", "У-у-а-а"),
+            new Animal("Обезьяна", "Самка", "У-у-а-а")
+        });
+
+        var aviary3 = new Aviary("Слоны", new List<Animal>()
+        {
+             new Animal("Слон", "Самец", "Трууу"),
+             new Animal("Слон", "Самка", "Трууу")
+        });
+
+        var aviary4 = new Aviary("Пингвины", new List<Animal>()
+        {
+             new Animal("Пингвин", "Самец", "Кря"),
+             new Animal("Пингвин", "Самец", "Кря"),
+             new Animal("Пингвин", "Самка", "Кря"),
+             new Animal("Пингвин", "Самка", "Кря"),
+             new Animal("Пингвин", "Самка", "Кря"),
+             new Animal("Пингвин", "Самка", "Кря"),
+             new Animal("Пингвин", "Самка", "Кря"),
+             new Animal("Пингвин", "Самец", "Кря")
+        });
+
+        _aviaries.Add(aviary1);
+        _aviaries.Add(aviary2);
+        _aviaries.Add(aviary3);
+        _aviaries.Add(aviary4);
     }
 
     public void ShowMenu()
@@ -67,8 +107,6 @@ public class Zoo
         const string CommandExit = "5";
 
         bool isZooOpen = true;
-
-        AddAnimals();
 
         while (isZooOpen)
         {
@@ -101,18 +139,3 @@ public class Zoo
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-//Пользователь запускает приложение и перед ним находится меню, в котором он может выбрать, к какому вольеру подойти.
-//При приближении к вольеру, пользователю выводится информация о том, что это за вольер, сколько животных там обитает,
-//их пол и какой звук издает животное.
-//Вольеров в зоопарке может быть много, в решении нужно создать минимум 4 вольера.
