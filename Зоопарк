@@ -7,6 +7,43 @@ internal class Program
     }
 }
 
+public interface IAnimalFactory
+{
+    Animal CreateAnimal(string gender);
+}
+
+public class LionFactory : IAnimalFactory
+{
+    public Animal CreateAnimal(string gender)
+    {
+        return new Animal("Лев", gender, "Ррррр");
+    }
+}
+
+public class MonkeyFactory : IAnimalFactory
+{
+    public Animal CreateAnimal(string gender)
+    {
+        return new Animal("Обезьяна", gender, "У-у-а-а");
+    }
+}
+
+public class ElephantFactory : IAnimalFactory
+{
+    public Animal CreateAnimal(string gender)
+    {
+        return new Animal("Слон", gender, "Трууу");
+    }
+}
+
+public class PenguinFactory : IAnimalFactory
+{
+    public Animal CreateAnimal(string gender)
+    {
+        return new Animal("Пингвин", gender, "Кря");
+    }
+}
+
 public class Animal
 {
     public Animal(string name, string genders, string sound)
@@ -39,7 +76,7 @@ public class Aviary
 
         foreach (var animal in _animals)
         {
-            Console.WriteLine($"Животное: {animal.Name}, пол - {animal.Genders}, издает звук - {animal.Sound}."); ;
+            Console.WriteLine($"Животное: {animal.Name}, пол - {animal.Genders}, издает звук - {animal.Sound}.");
         }
     }
 }
@@ -51,51 +88,38 @@ public class Zoo
     public Zoo()
     {
         _aviaries = new List<Aviary>();
-        AddAnimaals();
+        AddAnimals();
     }
 
-    private void AddAnimaals()
+    private void AddAnimals()
     {
-        var aviary1 = new Aviary("Львы", new List<Animal>()
-        {
-            new Animal("Лев", "Самец", "Рррр"),
-            new Animal("Львицы", "Самка", "Рррр"),
-            new Animal("Лев", "Самец", "Рррр"),
-            new Animal("Львицы", "Самка", "Рррр")
-        });
+        Random random = new Random();
 
-        var aviary2 = new Aviary("Обезьяны", new List<Animal>()
+        List<IAnimalFactory> animalFactories = new List<IAnimalFactory>
         {
-            new Animal("Обезьяна", "Самец", "У-у-а-а"),
-            new Animal("Обезьяна", "Самка", "У-у-а-а"),
-            new Animal("Обезьяна", "Самка", "У-у-а-а"),
-            new Animal("Обезьяна", "Самка", "У-у-а-а"),
-            new Animal("Обезьяна", "Самец", "У-у-а-а"),
-            new Animal("Обезьяна", "Самка", "У-у-а-а")
-        });
+            new LionFactory(),
+            new MonkeyFactory(),
+            new ElephantFactory(),
+            new PenguinFactory()
+        };
 
-        var aviary3 = new Aviary("Слоны", new List<Animal>()
+        foreach (var factory in animalFactories)
         {
-             new Animal("Слон", "Самец", "Трууу"),
-             new Animal("Слон", "Самка", "Трууу")
-        });
+            List<Animal> animals = new List<Animal>();
 
-        var aviary4 = new Aviary("Пингвины", new List<Animal>()
-        {
-             new Animal("Пингвин", "Самец", "Кря"),
-             new Animal("Пингвин", "Самец", "Кря"),
-             new Animal("Пингвин", "Самка", "Кря"),
-             new Animal("Пингвин", "Самка", "Кря"),
-             new Animal("Пингвин", "Самка", "Кря"),
-             new Animal("Пингвин", "Самка", "Кря"),
-             new Animal("Пингвин", "Самка", "Кря"),
-             new Animal("Пингвин", "Самец", "Кря")
-        });
+            int genderAnimal = 2;
+            int minNumberAnimal = 2;
+            int maxNumberAnimal = 8;
+            int countAnimals = random.Next(minNumberAnimal, maxNumberAnimal);
 
-        _aviaries.Add(aviary1);
-        _aviaries.Add(aviary2);
-        _aviaries.Add(aviary3);
-        _aviaries.Add(aviary4);
+            for (int i = 0; i < countAnimals; i++)
+            {
+                string gender = random.Next(genderAnimal) == 0 ? "Самец" : "Самка";
+                animals.Add(factory.CreateAnimal(gender));
+            }
+
+            _aviaries.Add(new Aviary(animals[0].Name, animals));
+        }
     }
 
     public void ShowMenu()
@@ -115,7 +139,7 @@ public class Zoo
             Console.WriteLine($"{CommandShowAviaryLions} - Посетить вольер со львами.");
             Console.WriteLine($"{CommandShowAviaryMonkeys} - Посетить вольер с обезьянами.");
             Console.WriteLine($"{CommandShowAviaryElephants} - Посетить вольер со слонами.");
-            Console.WriteLine($"{CommandShowAviaryPenguins} - Посетить вольер с пенгвинами.");
+            Console.WriteLine($"{CommandShowAviaryPenguins} - Посетить вольер с пингвинами.");
             Console.WriteLine($"{CommandExit} - Выйти из зоопарка.");
             string input = Console.ReadLine();
 
